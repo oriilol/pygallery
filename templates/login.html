@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar Sesión</title>
+    <style>
+        body { font-family: sans-serif; background: #222; color: white; text-align: center; padding-top: 50px; }
+        input { padding: 10px; margin: 10px; border-radius: 5px; border: none; }
+        input[type="submit"] { background: #e67e22; color: white; cursor: pointer; font-weight: bold;}
+    </style>
+</head>
+<body>
+    <h1>Acceso Restringido</h1>
+    <form method="POST">
+        <input type="text" name="username" placeholder="Usuario" required><br>
+        <input type="password" name="password" placeholder="Contraseña" required><br>
+        <input type="submit" value="Entrar">
+    </form>
+    <br>
+    <p>¿No tienes cuenta? <a href="/registro" style="color: #27ae60;">Regístrate gratis</a></p>
+</body>
+</html>

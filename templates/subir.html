@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Subir Foto</title>
+    <style>body { font-family: sans-serif; background: #333; color: white; text-align: center; padding-top: 50px; }</style>
+</head>
+<body>
+    <h1>Subir imagen</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <label>Foto:</label><br>
+        <input type="file" name="archivo" required><br><br>
+        
+        <label>Título:</label><br>
+        <input type="text" name="titulo" placeholder="Ej: Mi perro"><br><br>
+        
+        <input type="submit" value="Guardar en Nube">
+    </form>
+    <br>
+    <a href="/" style="color: #e67e22;">Volver</a>
+</body>
+</html>

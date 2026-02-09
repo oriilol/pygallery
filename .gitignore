@@ -1,0 +1,16 @@
+#Este archivo es para que ignore las siguientes carpetas en local.
+
+# Ignorar la carpeta del entorno virtual
+venv/
+
+# Ignorar archivos compilados por python
+__pycache__/
+*.pyc
+
+# Ignorar archivos de sistema
+.DS_Store
+Thumbs.db
+# Ignorar fotos subidas actualmente
+static/imagenes/*
+# Mantener carpeta vacía
+!static/imagenes/.gitkeep

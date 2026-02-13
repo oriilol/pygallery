@@ -18,5 +18,14 @@
     </form>
     <br>
     <a href="/" style="color: #e67e22;">Volver</a>
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div style="background-color: #e74c3c; color: white; padding: 15px; margin-bottom: 20px; border-radius: 5px; text-align: center;">
+      {% for message in messages %}
+        <p style="margin: 0;">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
 </body>
 </html>

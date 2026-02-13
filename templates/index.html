@@ -5,10 +5,19 @@
     <title>PyGallery</title>
     <style>
         body { font-family: sans-serif; background: #222; color: white; text-align: center; margin: 0; }
-        .galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; padding: 20px; }
+        .galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; padding: 20px; }
         
-        .foto { background: #333; padding: 10px; border-radius: 8px; }
-        .foto img { width: 100%; height: 200px; object-fit: cover; border-radius: 5px; border: 2px solid #555; }
+        .foto { background: #333; padding: 10px; border-radius: 8px; border: 1px solid #444; }
+        
+        /* AQUI ESTA EL CAMBIO CSS: Afecta tanto a img como a video */
+        .foto img, .foto video { 
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover; /* Recorta la imagen/video para llenar el cuadrado sin deformarse */
+            border-radius: 5px; 
+            border: 2px solid #555; 
+            display: block;
+        }
         
         .boton { background: #e67e22; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; }
         .barra-usuario { background: #333; padding: 15px; text-align: right; border-bottom: 2px solid #e67e22; }
@@ -26,6 +35,9 @@
             cursor: pointer;
         }
         .btn-borrar:hover { background: #e74c3c; }
+        
+        /* Estilo para el título debajo de la foto */
+        .foto p { margin: 10px 0 5px 0; font-size: 0.9em; color: #ccc; }
     </style>
 </head>
 <body>
@@ -38,29 +50,39 @@
         {% endif %}
     </div>
 
-    <h1>Mi Galería PyGallery</h1>
+    <h1>📸 Mi Galería PyGallery</h1>
 
     {% if session.usuario_nombre %}
-        <p><a href="/subir" class="boton">+ Subir Foto Nueva</a></p>
+        <p><a href="/subir" class="boton">+ Subir Archivo Nuevo</a></p>
     {% endif %}
     
     <div class="galeria">
         {% for foto in fotos %}
             <div class="foto">
-                <a href="{{ url_for('static', filename='imagenes/' + foto.nombre_archivo) }}" target="_blank">
-                    <img src="{{ url_for('static', filename='imagenes/' + foto.nombre_archivo) }}">
-                </a>
+                
+                {% set extension = foto.nombre_archivo.split('.')[-1].lower() %}
+                
+                {% if extension in ['mp4', 'mov', 'avi', 'mkv', 'webm'] %}
+                    <video controls preload="metadata">
+                        <source src="{{ url_for('static', filename='imagenes/' + foto.nombre_archivo) }}" type="video/{{ extension }}">
+                        Tu navegador no soporta este vídeo.
+                    </video>
+                {% else %}
+                    <a href="{{ url_for('static', filename='imagenes/' + foto.nombre_archivo) }}" target="_blank">
+                        <img src="{{ url_for('static', filename='imagenes/' + foto.nombre_archivo) }}" loading="lazy">
+                    </a>
+                {% endif %}
                 
                 <p>{{ foto.titulo }}</p>
 
                 {% if session.usuario_nombre %}
-                    <a href="/borrar/{{ foto.id }}" class="btn-borrar" onclick="return confirm('¿Seguro que quieres borrar esta foto para siempre?');">
-                        Eliminar
+                    <a href="/borrar/{{ foto.id }}" class="btn-borrar" onclick="return confirm('¿Seguro que quieres borrar este archivo para siempre?');">
+                        🗑️ Eliminar
                     </a>
                 {% endif %}
             </div>
         {% else %}
-            <p>No hay fotos todavía.</p>
+            <p>No hay archivos todavía.</p>
         {% endfor %}
     </div>
 </body>

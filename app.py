@@ -205,3 +205,4 @@ def borrar_foto(foto_id):
 
 if __name__ == '__main__':
     app.run(host='192.168.1.39', port=5000, ssl_context=('cert.pem', 'key.pem'), debug=True)
+#Ha pasado un fallo tecnico que he subido el codigo con la cuenta de Gonzalo, ya que el usó mi ordenador la semana pasada.

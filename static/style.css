@@ -1,0 +1,217 @@
+/* IMPORTAR FUENTE DM SANS */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap');
+
+/* --- RESET Y BASE --- */
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
+
+body {
+    font-family: 'DM Sans', sans-serif; /* Nueva fuente aplicada */
+    background-color: #0f172a; 
+    color: #e2e8f0;            
+    line-height: 1.6;
+}
+
+a { text-decoration: none; transition: 0.3s; }
+
+/* --- BARRA DE NAVEGACION --- */
+.barra-usuario {
+    background: #1e293b;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border-bottom: 1px solid #334155;
+}
+
+.barra-usuario span { margin-right: 15px; font-weight: 500; }
+
+.btn-nav {
+    background: #334155;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    border: 1px solid #475569;
+}
+.btn-nav:hover { background: #475569; }
+
+.btn-logout { background: #b91c1c; border-color: #991b1b; }
+.btn-logout:hover { background: #dc2626; }
+
+/* --- TITULOS Y BOTONES PRINCIPALES --- */
+h1 {
+    text-align: center;
+    margin-top: 40px;
+    font-weight: 700; /* Mas grosor para DM Sans */
+    letter-spacing: -1px;
+    color: #f8fafc;
+}
+
+.accion-principal {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.boton-grande {
+    background: #2563eb;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 6px;
+    font-weight: 700;
+    display: inline-block;
+}
+.boton-grande:hover { background: #1d4ed8; }
+
+/* --- BARRA DE ESPACIO (DENTRO DE INDEX) --- */
+.espacio-container {
+    background: #1e293b;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin: 0 auto 30px auto;
+    max-width: 500px;
+    border: 1px solid #334155;
+    text-align: center;
+}
+
+.espacio-texto {
+    font-size: 0.9em;
+    color: #cbd5e1;
+    margin-bottom: 8px;
+}
+
+.espacio-barra-fondo {
+    background: #0f172a;
+    border-radius: 10px;
+    height: 12px;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid #334155;
+}
+
+.espacio-barra-progreso {
+    background: #3b82f6;
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+.espacio-barra-progreso.alerta {
+    background: #ef4444; 
+}
+
+/* --- GRID DE LA GALERIA --- */
+.galeria {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 20px 5%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.card {
+    background: #1e293b;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #334155;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- MEDIA (FOTOS Y VIDEOS) --- */
+.media-container {
+    width: 100%;
+    height: 200px;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.media-container img, .media-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --- INFO DE LA TARJETA --- */
+.card-info {
+    padding: 15px;
+    text-align: center;
+    flex-grow: 1;
+}
+
+.card-title {
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #f1f5f9;
+}
+
+.btn-borrar {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: #1e293b;
+    color: #ef4444;
+    text-align: center;
+    font-size: 0.85em;
+    border-top: 1px solid #334155;
+    cursor: pointer;
+}
+
+.btn-borrar:hover {
+    background: #ef4444;
+    color: white;
+}
+
+/* --- FORMULARIOS (LOGIN / SUBIR) --- */
+.form-container {
+    background: #1e293b;
+    padding: 40px;
+    border-radius: 8px;
+    max-width: 400px;
+    margin: 60px auto;
+    text-align: center;
+    border: 1px solid #334155;
+}
+
+input[type="text"], input[type="password"], input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0 20px 0;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+}
+
+input[type="submit"] {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: 700;
+    font-family: 'DM Sans', sans-serif;
+}
+input[type="submit"]:hover { background: #1d4ed8; }
+
+.alerta-error {
+    background: #450a0a;
+    border: 1px solid #ef4444;
+    color: #fca5a5;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: left;
+    font-size: 0.9em;
+}

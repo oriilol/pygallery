@@ -2,21 +2,28 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Crear Cuenta</title>
-    <style>
-        body { font-family: sans-serif; background: #222; color: white; text-align: center; padding-top: 50px; }
-        input { padding: 10px; margin: 10px; border-radius: 5px; border: none; }
-        input[type="submit"] { background: #27ae60; color: white; cursor: pointer; font-weight: bold;}
-    </style>
+    <title>pyGallery - Registro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Únete a PyGallery</h1>
-    <form method="POST">
-        <input type="text" name="username" placeholder="Elige Usuario" required><br>
-        <input type="password" name="password" placeholder="Elige Contraseña" required><br>
-        <input type="submit" value="Crear Cuenta">
-    </form>
-    <br>
-    <a href="/login" style="color: #aaa;">¿Ya tienes cuenta? Entra aquí.</a>
+    <div class="form-container">
+        <h1>Únete a pyGallery</h1>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alerta-error">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <input type="text" name="username" placeholder="Usuario" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <input type="submit" value="Crear Cuenta">
+        </form>
+        <br>
+        <a href="/login" style="font-size: 0.9em; color: #94a3b8;">¿Ya tienes cuenta? Entra aqui.</a>
+    </div>
 </body>
 </html>

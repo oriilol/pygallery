@@ -2,30 +2,42 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Subir Foto</title>
-    <style>body { font-family: sans-serif; background: #333; color: white; text-align: center; padding-top: 50px; }</style>
+    <title>pyGallery - Subir</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Subir imagen</h1>
-    <form method="POST" enctype="multipart/form-data">
-        <label>Foto:</label><br>
-        <input type="file" name="archivo" required><br><br>
+    <div class="form-container">
+        <h1>Subir archivo</h1>
         
-        <label>Título:</label><br>
-        <input type="text" name="titulo" placeholder="Ej: Mi perro"><br><br>
-        
-        <input type="submit" value="Guardar en Nube">
-    </form>
-    <br>
-    <a href="/" style="color: #e67e22;">Volver</a>
-    {% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <div style="background-color: #e74c3c; color: white; padding: 15px; margin-bottom: 20px; border-radius: 5px; text-align: center;">
-      {% for message in messages %}
-        <p style="margin: 0;">{{ message }}</p>
-      {% endfor %}
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="alerta-error">
+              {% for message in messages %}
+                <p style="margin: 0;">{{ message }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        {% if lleno %}
+            <div class="alerta-error" style="text-align: center; padding: 20px; background: #450a0a;">
+                <strong>Espacio agotado</strong><br><br>
+                Has alcanzado el limite de 15 GB.<br>
+                Borra archivos para poder subir mas.
+            </div>
+        {% else %}
+            <form method="POST" enctype="multipart/form-data">
+                <label style="display:block; text-align:left; margin-bottom:5px; color:#cbd5e1;">Selecciona archivo:</label>
+                <input type="file" name="archivo" required>
+                
+                <input type="text" name="titulo" placeholder="Titulo (opcional)">
+                
+                <input type="submit" value="Guardar en Nube">
+            </form>
+        {% endif %}
+
+        <br>
+        <a href="/" style="color: #94a3b8; font-size: 0.9em;">Cancelar</a>
     </div>
-  {% endif %}
-{% endwith %}
 </body>
 </html>

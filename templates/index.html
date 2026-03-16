@@ -10,10 +10,13 @@
 
     <div class="barra-usuario">
         {% if session.usuario_nombre %}
-            <span>Hola, {{ session.usuario_nombre }}</span>
+            <span>¡Hola, {{ session.usuario_nombre }}!</span>
             <a href="/logout" class="btn-nav btn-logout">Cerrar Sesion</a>
+            <form action="/borrar_cuenta" method="POST" style="display: inline; margin-left: 10px;">
+                <button type="submit" class="btn-nav" style="background-color: #dc2626; color: white; border: none; cursor: pointer;" onclick="return confirm('¿ESTÁS SEGURO? Se borrara tu cuenta y todos tus archivos de la nube para siempre. Esta acción es IRREVERSIBLE.');">Eliminar Cuenta</button>
+            </form>
         {% else %}
-            <a href="/login" class="btn-nav">Iniciar Sesion</a>
+            <a href="/login" class="btn-nav">Iniciar Sesión</a>
         {% endif %}
     </div>
 
@@ -50,7 +53,7 @@
                     </a>
                 {% else %}
                     <div style="text-align: center; padding: 20px;">
-                        <p style="font-size: 0.8em; color: #94a3b8; margin-bottom: 10px;">Formato {{ extension.upper() }} no compatible con reproducción directa</p>
+                        <p style="font-size: 0.8em; color: #94a3b8; margin-bottom: 10px;">Formato {{ extension.upper() }} no compatible con reproduccion directa</p>
                         <a href="{{ url_for('static', filename='imagenes/' ~ session.usuario_id ~ '/' ~ foto.nombre_archivo) }}" 
                            download class="btn-nav" style="background: #2563eb;">Descargar para ver</a>
                     </div>
@@ -64,7 +67,7 @@
             <a href="/borrar/{{ foto.id }}" class="btn-borrar" onclick="return confirm('¿Seguro?');">Eliminar</a>
         </div>
     {% endfor %}
-</div>
+    </div>
 
 </body>
 </html>

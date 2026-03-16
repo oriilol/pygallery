@@ -9,9 +9,9 @@ import time
 from PIL import Image, ImageDraw
 import urllib3
 
-SERVIDOR_URL = "https://192.168.1.39:5000"
+SERVIDOR_URL = "https://pygallery.ddns.net:5000"
 
-EXT_VALIDAS = ('.png', '.jpg', '.jpeg', '.gif', '.mp4', '.mov', '.avi', '.mkv')
+EXT_VALIDAS = ('.png', '.jpg', '.jpeg', '.gif', '.webp', '.mp4', '.mov', '.avi', '.mkv', '.webm')
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -22,7 +22,7 @@ class PyGalleryApp:
 
         self.root.title("pygallery Desktop Sync")
         self.root.geometry("500x550")
-        self.root.configure(bg="#222")
+        self.root.configure(bg="#1e1e1e")
         self.root.protocol("WM_DELETE_WINDOW", self.on_close_callback)
 
         self.usuario_id = None
@@ -35,20 +35,20 @@ class PyGalleryApp:
 
     def crear_login(self):
         self.limpiar_ventana()
+        tk.Label(self.root, text="pygallery", bg="#1e1e1e", fg="#3b82f6", font=("Arial", 24, "bold")).pack(pady=(40,0))
+        tk.Label(self.root, text="Desktop Sync", bg="#1e1e1e", fg="white", font=("Arial", 10)).pack(pady=(0,20))
 
-        tk.Label(self.root, text="pygallery Desktop Sync", bg="#222", fg="white", font=("Segoe UI", 16, "bold")).pack(pady=30)
+        tk.Label(self.root, text="Usuario:", bg="#1e1e1e", fg="#aaa").pack()
+        self.entry_user = tk.Entry(self.root, font=("Arial", 11), bg="#333", fg="white", insertbackground="white", bd=0)
+        self.entry_user.pack(pady=5, ipady=5, padx=50, fill="x")
 
-        tk.Label(self.root, text="Usuario:", bg="#222", fg="#aaa").pack()
-        self.entry_user = tk.Entry(self.root, font=("Arial", 11))
-        self.entry_user.pack(pady=5)
+        tk.Label(self.root, text="Contraseña:", bg="#1e1e1e", fg="#aaa").pack()
+        self.entry_pass = tk.Entry(self.root, show="*", font=("Arial", 11), bg="#333", fg="white", insertbackground="white", bd=0)
+        self.entry_pass.pack(pady=5, ipady=5, padx=50, fill="x")
 
-        tk.Label(self.root, text="Contrasena:", bg="#222", fg="#aaa").pack()
-        self.entry_pass = tk.Entry(self.root, show="*", font=("Arial", 11))
-        self.entry_pass.pack(pady=5)
+        tk.Button(self.root, text="INICIAR SESIÓN", command=self.login, bg="#2563eb", fg="white", font=("Arial", 10, "bold"), bd=0, cursor="hand2").pack(pady=30, ipady=10, padx=50, fill="x")
 
-        tk.Button(self.root, text="Iniciar Sesion", command=self.login, bg="#444", fg="white", font=("Arial", 11), bd=0, padx=20, pady=5).pack(pady=30)
-
-        btn_reg = tk.Label(self.root, text="Crear cuenta nueva", bg="#222", fg="#3498db", cursor="hand2")
+        btn_reg = tk.Label(self.root, text="¿No tienes cuenta? Regístrate aquí", bg="#1e1e1e", fg="#3498db", cursor="hand2")
         btn_reg.pack()
         btn_reg.bind("<Button-1>", lambda e: webbrowser.open(f"{SERVIDOR_URL}/registro"))
 
@@ -57,7 +57,7 @@ class PyGalleryApp:
         password = self.entry_pass.get()
 
         try:
-            respuesta = requests.post(f"{SERVIDOR_URL}/api/login", json={"username": user, "password": password}, verify=False)
+            respuesta = requests.post(f"{SERVIDOR_URL}/api/login", json={"username": user, "password": password}, verify=False, timeout=10)
 
             if respuesta.status_code == 200:
                 datos = respuesta.json()
@@ -66,27 +66,26 @@ class PyGalleryApp:
                 self.session.post(f"{SERVIDOR_URL}/login", data={"username": user, "password": password}, verify=False)
                 self.crear_interfaz_sync(datos.get('username', 'Usuario'))
             else:
-                messagebox.showerror("Error", "Credenciales incorrectas")
+                messagebox.showerror("Error", "Usuario o contraseña incorrectos")
         except Exception as e:
-            messagebox.showerror("Error Conexion", f"No se pudo conectar: {e}")
+            messagebox.showerror("Error de Red", f"No se pudo conectar con el servidor: {e}")
 
     def crear_interfaz_sync(self, nombre):
         self.limpiar_ventana()
+        tk.Label(self.root, text=f"Bienvenido, {nombre}", bg="#1e1e1e", fg="white", font=("Arial", 14, "bold")).pack(pady=10)
 
-        tk.Label(self.root, text=f"Usuario: {nombre}", bg="#222", fg="white", font=("Segoe UI", 12)).pack(pady=10)
-
-        self.lbl_estado = tk.Label(self.root, text="Estado: Inactivo", bg="#222", fg="#aaa", font=("Arial", 10))
+        self.lbl_estado = tk.Label(self.root, text="Estado: Esperando configuración...", bg="#1e1e1e", fg="#ef4444", font=("Arial", 9))
         self.lbl_estado.pack(pady=5)
 
-        tk.Button(self.root, text="Seleccionar Carpeta", command=self.seleccionar_carpeta, bg="#444", fg="white", font=("Arial", 11), pady=5).pack(pady=15)
+        tk.Button(self.root, text="SELECCIONAR CARPETA", command=self.seleccionar_carpeta, bg="#334155", fg="white", font=("Arial", 9, "bold"), bd=0).pack(pady=10, ipady=8, padx=100, fill="x")
 
-        self.log_box = scrolledtext.ScrolledText(self.root, width=55, height=15, bg="#333", fg="#ccc", font=("Consolas", 8))
-        self.log_box.pack(pady=10, padx=10)
+        self.log_box = scrolledtext.ScrolledText(self.root, width=55, height=12, bg="#0f172a", fg="#94a3b8", font=("Consolas", 8), bd=0)
+        self.log_box.pack(pady=10, padx=20)
 
-        tk.Button(self.root, text="Cerrar Sesion", command=self.detener_y_salir, bg="#882222", fg="white").pack(pady=10)
+        tk.Button(self.root, text="Cerrar Sesión", command=self.detener_y_salir, bg="#b91c1c", fg="white", bd=0).pack(pady=10, padx=150, fill="x")
 
     def log(self, mensaje):
-        self.log_box.insert(tk.END, f"{mensaje}\n")
+        self.log_box.insert(tk.END, f"[{time.strftime('%H:%M:%S')}] {mensaje}\n")
         self.log_box.see(tk.END)
 
     def seleccionar_carpeta(self):
@@ -94,7 +93,7 @@ class PyGalleryApp:
         if carpeta:
             self.carpeta_sync = carpeta
             self.lbl_estado.config(text=f"Sincronizando: {os.path.basename(carpeta)}", fg="#2ecc71")
-            self.log(f"Carpeta: {carpeta}")
+            self.log(f"Configurado: {carpeta}")
 
             if not self.hilo_activo:
                 self.hilo_activo = True
@@ -102,36 +101,52 @@ class PyGalleryApp:
 
     def proceso_sincronizacion(self):
         while self.hilo_activo:
-            self.log("Escaneando...")
-
-            try:
-                for nombre_archivo in os.listdir(self.carpeta_sync):
-                    if nombre_archivo.lower().endswith(EXT_VALIDAS):
+            if self.carpeta_sync:
+                try:
+                    archivos_en_carpeta = [f for f in os.listdir(self.carpeta_sync) if f.lower().endswith(EXT_VALIDAS)]
+                    for nombre_archivo in archivos_en_carpeta:
+                        if not self.hilo_activo: break
+                        
                         ruta_completa = os.path.join(self.carpeta_sync, nombre_archivo)
-
+                        
                         if nombre_archivo not in self.archivos_enviados:
-                            self.subir_archivo(ruta_completa, nombre_archivo)
-            except Exception as e:
-                self.log(f"Error: {e}")
+                            exito = self.subir_archivo(ruta_completa, nombre_archivo)
+                            if not exito:
+                                break 
+                except Exception as e:
+                    self.log(f"Error de escaneo: {e}")
 
-            time.sleep(300)
+            time.sleep(10)
 
     def subir_archivo(self, ruta, nombre):
         try:
-            self.log(f"Subiendo: {nombre}")
-            archivos = {'archivo': open(ruta, 'rb')}
-            datos = {'titulo': nombre}
+            self.log(f"Subiendo: {nombre}...")
+            with open(ruta, 'rb') as f:
+                archivos = {'archivo': (nombre, f)}
+                datos = {'titulo': f"Sync: {nombre}"}
+                
+                r = self.session.post(f"{SERVIDOR_URL}/subir", files=archivos, data=datos, verify=False, timeout=60)
 
-            r = self.session.post(f"{SERVIDOR_URL}/subir", files=archivos, data=datos, verify=False)
+                texto_respuesta = r.text.lower()
+                
+                errores_limite = ["no tienes espacio suficiente", "límite de 15gb", "limite de 15gb", "supera los 15gb"]
+                
+                if any(error in texto_respuesta for error in errores_limite):
+                    self.log("ERROR: Nube llena (15GB alcanzados).")
+                    messagebox.showwarning("Almacenamiento Lleno", "Has alcanzado el límite de 15GB.")
+                    return False
 
-            if r.status_code == 200:
-                self.log("Completado.")
-                self.archivos_enviados.add(nombre)
-            else:
-                self.log(f"Fallo al subir {nombre}")
+                if r.status_code == 200:
+                    self.log(f"Completado.")
+                    self.archivos_enviados.add(nombre)
+                    return True
+                else:
+                    self.log(f"Fallo al subir {nombre}")
+                    return True
 
         except Exception as e:
-            self.log(f"Error red: {e}")
+            self.log(f"Error de red: {e}")
+            return False
 
     def detener_y_salir(self):
         self.hilo_activo = False
@@ -142,9 +157,9 @@ class PyGalleryApp:
             widget.destroy()
 
 def crear_icono(root):
-    image = Image.new('RGB', (64, 64), color='#333')
+    image = Image.new('RGB', (64, 64), color='#1e1e1e')
     d = ImageDraw.Draw(image)
-    d.rectangle([(20, 20), (44, 44)], fill='white')
+    d.rectangle([(15, 15), (49, 49)], fill='#2563eb')
 
     def restaurar(icon, item):
         root.after(0, root.deiconify)
@@ -153,7 +168,7 @@ def crear_icono(root):
         icon.stop()
         root.after(0, root.destroy)
 
-    menu = pystray.Menu(pystray.MenuItem('Abrir', restaurar), pystray.MenuItem('Salir', salir))
+    menu = pystray.Menu(pystray.MenuItem('Abrir pygallery', restaurar), pystray.MenuItem('Cerrar Aplicación', salir))
     return pystray.Icon("pygallery", image, "pygallery Sync", menu)
 
 def main():

@@ -9,12 +9,14 @@
     <div class="form-container">
         <h1>Únete a pyGallery</h1>
 
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            {% for message in messages %}
-              <div class="alerta-error">{{ message }}</div>
-            {% endfor %}
-          {% endif %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+         <div class="alerta-{{ 'exito' if category == 'exito' else 'error' }}">
+        {{ message }}
+      </div>
+        {% endfor %}
+        {% endif %}
         {% endwith %}
 
         <form method="POST">

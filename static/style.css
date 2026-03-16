@@ -9,7 +9,7 @@
 }
 
 body {
-    font-family: 'DM Sans', sans-serif; /* Nueva fuente aplicada */
+    font-family: 'DM Sans', sans-serif;
     background-color: #0f172a; 
     color: #e2e8f0;            
     line-height: 1.6;
@@ -36,17 +36,33 @@ a { text-decoration: none; transition: 0.3s; }
     border-radius: 4px;
     font-size: 0.9em;
     border: 1px solid #475569;
+    display: inline-block;
+    box-sizing: border-box;
+    vertical-align: middle;
+    font-family: 'DM Sans', sans-serif;
 }
 .btn-nav:hover { background: #475569; }
 
 .btn-logout { background: #b91c1c; border-color: #991b1b; }
 .btn-logout:hover { background: #dc2626; }
 
+.btn-eliminar {
+    background: #991b1b;
+    border-color: #7f1d1d;
+    cursor: pointer;
+    line-height: normal;
+    height: 100%;
+}
+
+.btn-eliminar:hover {
+    background: #dc2626;
+}
+
 /* --- TITULOS Y BOTONES PRINCIPALES --- */
 h1 {
     text-align: center;
     margin-top: 40px;
-    font-weight: 700; /* Mas grosor para DM Sans */
+    font-weight: 700;
     letter-spacing: -1px;
     color: #f8fafc;
 }
@@ -209,6 +225,16 @@ input[type="submit"]:hover { background: #1d4ed8; }
     background: #450a0a;
     border: 1px solid #ef4444;
     color: #fca5a5;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: left;
+    font-size: 0.9em;
+}
+.alerta-exito {
+    background: #064e3b;
+    border: 1px solid #10b981;
+    color: #d1fae5;
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 4px;

@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 import mysql.connector
 import os
 import time
+import shutil
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -109,10 +110,10 @@ def registro():
             conexion.commit()
             cursor.close()
             conexion.close()
-            flash("Cuenta creada con exito. Inicia sesion.")
+            flash("Cuenta creada con exito. Inicia sesion.", "exito")
             return redirect(url_for('login'))
         except mysql.connector.Error:
-            flash("Error: El nombre de usuario ya existe.")
+            flash("El usuario ya existe.", "error")
             return render_template('registro.html')
     return render_template('registro.html')
 
@@ -203,6 +204,28 @@ def borrar_foto(foto_id):
     conexion.close()
     return redirect(url_for('inicio'))
 
+@app.route('/borrar_cuenta', methods=['POST'])
+def borrar_cuenta():
+    if 'usuario_id' not in session:
+        return redirect(url_for('login'))
+        
+    id_actual = session['usuario_id']
+    
+    conexion = conectar_bd()
+    cursor = conexion.cursor()
+    cursor.execute("DELETE FROM fotos WHERE usuario_id = %s", (id_actual,))
+    cursor.execute("DELETE FROM usuarios WHERE id = %s", (id_actual,))
+    conexion.commit()
+    cursor.close()
+    conexion.close()
+    
+    ruta_usuario = obtener_carpeta_usuario(id_actual)
+    if os.path.exists(ruta_usuario):
+        shutil.rmtree(ruta_usuario)
+        
+    session.clear()
+    flash("Tu cuenta y todos tus archivos han sido eliminados.")
+    return redirect(url_for('login'))
+
 if __name__ == '__main__':
     app.run(host='192.168.1.39', port=5000, ssl_context=('cert.pem', 'key.pem'), debug=True)
-#Ha pasado un fallo tecnico que he subido el codigo con la cuenta de Gonzalo, ya que el usó mi ordenador la semana pasada.

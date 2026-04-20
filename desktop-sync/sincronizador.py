@@ -6,6 +6,7 @@ import os
 import threading
 import pystray
 import time
+import platform
 from PIL import Image, ImageDraw
 import urllib3
 
@@ -166,21 +167,35 @@ def crear_icono(root):
 
     def salir(icon, item):
         icon.stop()
-        root.after(0, root.destroy)
+        os._exit(0)
 
     menu = pystray.Menu(pystray.MenuItem('Abrir pygallery', restaurar), pystray.MenuItem('Cerrar Aplicación', salir))
     return pystray.Icon("pygallery", image, "pygallery Sync", menu)
 
 def main():
     root = tk.Tk()
-    icon = crear_icono(root)
+    
+    es_mac = platform.system() == "Darwin"
 
-    def ocultar_ventana():
-        root.withdraw()
-        if not icon.visible:
-            threading.Thread(target=icon.run, daemon=True).start()
+    if not es_mac:
+        icon = crear_icono(root)
 
-    app = PyGalleryApp(root, on_close_callback=ocultar_ventana)
+    def manejar_cierre():
+        if es_mac:
+            root.iconify()
+        else:
+            root.withdraw()
+            if not icon.visible:
+                threading.Thread(target=icon.run, daemon=True).start()
+
+    app = PyGalleryApp(root, on_close_callback=manejar_cierre)
+
+    if es_mac:
+        try:
+            root.createcommand('tk::mac::Quit', lambda: os._exit(0))
+        except Exception:
+            pass
+
     root.mainloop()
 
 if __name__ == "__main__":

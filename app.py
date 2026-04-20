@@ -3,6 +3,7 @@ import mysql.connector
 import os
 import time
 import shutil
+import uuid
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -24,7 +25,6 @@ EXTENSIONES_VIDEO = {'mp4', 'mov', 'avi', 'mkv', 'webm'}
 EXTENSIONES_VALIDAS = EXTENSIONES_FOTO.union(EXTENSIONES_VIDEO)
 
 LIMITE_ESPACIO_BYTES = 15 * 1024 * 1024 * 1024 
-
 
 def conectar_bd():
     return mysql.connector.connect(**CONFIG_BD)
@@ -55,6 +55,12 @@ def formatear_espacio(bytes_size):
     gb = mb / 1024
     return f"{gb:.2f} GB"
 
+@app.template_filter('tamano_archivo')
+def tamano_archivo(nombre_archivo, usuario_id):
+    ruta = os.path.join(obtener_carpeta_usuario(usuario_id), nombre_archivo)
+    if os.path.exists(ruta):
+        return formatear_espacio(os.path.getsize(ruta))
+    return "0 MB"
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
@@ -133,7 +139,7 @@ def login():
             session['usuario_nombre'] = user_encontrado['username']
             return redirect(url_for('inicio'))
         else:
-            flash("Usuario o contraseña incorrectos.")
+            flash("Usuario o contraseña incorrectos.", "error")
     return render_template('login.html')
 
 @app.route('/logout')
@@ -152,7 +158,7 @@ def subir_foto():
 
     if request.method == 'POST':
         if esta_lleno:
-            flash("No tienes espacio suficiente (Limite 15GB).")
+            flash("No tienes espacio suficiente (Limite 15GB).", "error")
             return redirect(url_for('subir_foto'))
 
         archivo = request.files['archivo']
@@ -162,7 +168,7 @@ def subir_foto():
             archivo.seek(0)
 
             if (bytes_usados + tamano_nuevo) > LIMITE_ESPACIO_BYTES:
-                flash("Este archivo supera el limite de 15GB.")
+                flash("Este archivo supera el limite de 15GB.", "error")
                 return redirect(url_for('subir_foto'))
 
             timestamp = int(time.time())
@@ -175,7 +181,7 @@ def subir_foto():
             conexion = conectar_bd()
             cursor = conexion.cursor()
             cursor.execute("INSERT INTO fotos (nombre_archivo, titulo, fecha, usuario_id) VALUES (%s, %s, NOW(), %s)", 
-                           (nombre_seguro, request.form.get('titulo'), id_actual))
+                           (nombre_seguro, request.form.get('titulo', 'Sin titulo'), id_actual))
             conexion.commit()
             cursor.close()
             conexion.close()
@@ -185,8 +191,7 @@ def subir_foto():
 
 @app.route('/borrar/<int:foto_id>')
 def borrar_foto(foto_id):
-    if 'usuario_id' not in session:
-        return redirect(url_for('login'))
+    if 'usuario_id' not in session: return redirect(url_for('login'))
     id_actual = session['usuario_id']
     conexion = conectar_bd()
     cursor_dict = conexion.cursor(dictionary=True)
@@ -194,8 +199,7 @@ def borrar_foto(foto_id):
     foto = cursor_dict.fetchone()
     if foto:
         ruta = os.path.join(obtener_carpeta_usuario(id_actual), foto['nombre_archivo'])
-        if os.path.exists(ruta):
-            os.remove(ruta)
+        if os.path.exists(ruta): os.remove(ruta)
         cursor = conexion.cursor()
         cursor.execute("DELETE FROM fotos WHERE id = %s", (foto_id,))
         conexion.commit()
@@ -206,11 +210,8 @@ def borrar_foto(foto_id):
 
 @app.route('/borrar_cuenta', methods=['POST'])
 def borrar_cuenta():
-    if 'usuario_id' not in session:
-        return redirect(url_for('login'))
-        
+    if 'usuario_id' not in session: return redirect(url_for('login'))
     id_actual = session['usuario_id']
-    
     conexion = conectar_bd()
     cursor = conexion.cursor()
     cursor.execute("DELETE FROM fotos WHERE usuario_id = %s", (id_actual,))
@@ -218,14 +219,46 @@ def borrar_cuenta():
     conexion.commit()
     cursor.close()
     conexion.close()
-    
     ruta_usuario = obtener_carpeta_usuario(id_actual)
-    if os.path.exists(ruta_usuario):
-        shutil.rmtree(ruta_usuario)
-        
+    if os.path.exists(ruta_usuario): shutil.rmtree(ruta_usuario)
     session.clear()
-    flash("Tu cuenta y todos tus archivos han sido eliminados.")
+    flash("Tu cuenta y todos tus archivos han sido eliminados.", "exito")
     return redirect(url_for('login'))
+
+@app.route('/compartir/<int:foto_id>', methods=['POST'])
+def compartir_foto(foto_id):
+    if 'usuario_id' not in session: return redirect(url_for('login'))
+    enlace_unico = uuid.uuid4().hex
+    conexion = conectar_bd()
+    cursor = conexion.cursor()
+    cursor.execute("UPDATE fotos SET enlace_compartido = %s WHERE id = %s AND usuario_id = %s", (enlace_unico, foto_id, session['usuario_id']))
+    conexion.commit()
+    cursor.close()
+    conexion.close()
+    return redirect(url_for('inicio'))
+
+@app.route('/dejar_compartir/<int:foto_id>', methods=['POST'])
+def dejar_compartir(foto_id):
+    if 'usuario_id' not in session: return redirect(url_for('login'))
+    conexion = conectar_bd()
+    cursor = conexion.cursor()
+    cursor.execute("UPDATE fotos SET enlace_compartido = NULL WHERE id = %s AND usuario_id = %s", (foto_id, session['usuario_id']))
+    conexion.commit()
+    cursor.close()
+    conexion.close()
+    return redirect(url_for('inicio'))
+
+@app.route('/v/<enlace>')
+def ver_compartido(enlace):
+    conexion = conectar_bd()
+    cursor = conexion.cursor(dictionary=True)
+    cursor.execute("SELECT f.*, u.username FROM fotos f JOIN usuarios u ON f.usuario_id = u.id WHERE f.enlace_compartido = %s", (enlace,))
+    foto = cursor.fetchone()
+    cursor.close()
+    conexion.close()
+    if not foto:
+        return "Este enlace ya no es valido o el usuario ha dejado de compartirlo.", 404
+    return render_template('compartido.html', foto=foto)
 
 if __name__ == '__main__':
     app.run(host='192.168.1.39', port=5000, ssl_context=('cert.pem', 'key.pem'), debug=True)

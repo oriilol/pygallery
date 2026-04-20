@@ -1,73 +1,136 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>pyGallery - Inicio</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
     <div class="barra-usuario">
         {% if session.usuario_nombre %}
-            <span>¡Hola, {{ session.usuario_nombre }}!</span>
-            <a href="/logout" class="btn-nav btn-logout">Cerrar Sesion</a>
-            <form action="/borrar_cuenta" method="POST" style="display: inline; margin-left: 10px;">
-                <button type="submit" class="btn-nav" style="background-color: #dc2626; color: white; border: none; cursor: pointer;" onclick="return confirm('¿ESTÁS SEGURO? Se borrara tu cuenta y todos tus archivos de la nube para siempre. Esta acción es IRREVERSIBLE.');">Eliminar Cuenta</button>
-            </form>
+        <span>¡Hola, {{ session.usuario_nombre }}!</span>
+        <a href="/logout" class="btn-nav btn-logout">Cerrar Sesion</a>
+        <form action="/borrar_cuenta" method="POST" style="display: inline; margin-left: 10px;">
+            <button type="submit" class="btn-nav btn-eliminar"
+                onclick="return confirm('¿ESTAS SEGURO? Se borrara tu cuenta y todos tus archivos. Esta accion es IRREVERSIBLE.');">Eliminar
+                Cuenta</button>
+        </form>
         {% else %}
-            <a href="/login" class="btn-nav">Iniciar Sesión</a>
+        <a href="/login" class="btn-nav">Iniciar Sesion</a>
         {% endif %}
     </div>
 
     <h1>Tu espacio</h1>
 
     {% if session.usuario_nombre %}
-        <div class="accion-principal">
-            <a href="/subir" class="boton-grande">Subir archivo</a>
+    <div class="accion-principal">
+        <a href="/subir" class="boton-grande">Subir archivo</a>
+    </div>
+
+    <div class="espacio-container">
+        <div class="espacio-texto">
+            Espacio utilizado: <strong>{{ espacio_usado }}</strong> de <strong>15.00 GB</strong>
         </div>
-        
-        <div class="espacio-container">
-            <div class="espacio-texto">
-                Espacio utilizado: <strong>{{ espacio_usado }}</strong> de <strong>15.00 GB</strong>
-            </div>
-            <div class="espacio-barra-fondo">
-                <div class="espacio-barra-progreso {% if porcentaje > 90 %}alerta{% endif %}" 
-                     style="width: {{ porcentaje }}%;"></div>
-            </div>
+        <div class="espacio-barra-fondo">
+            <div class="espacio-barra-progreso {% if porcentaje > 90 %}alerta{% endif %}"
+                style="width: {{ porcentaje }}%;"></div>
         </div>
+    </div>
     {% endif %}
-    
+
     <div class="galeria">
-    {% for foto in fotos %}
+        {% for foto in fotos %}
         <div class="card">
             {% set extension = foto.nombre_archivo.split('.')[-1].lower() %}
-            <div class="media-container">
+            {% set url_archivo = url_for('static', filename='imagenes/' ~ session.usuario_id ~ '/' ~
+            foto.nombre_archivo) %}
+
+            <div class="media-container" style="cursor: pointer;"
+                onclick="abrirModal('{{ url_archivo }}', '{{ extension }}')">
                 {% if extension in ['mp4', 'webm'] %}
-                    <video controls preload="metadata">
-                        <source src="{{ url_for('static', filename='imagenes/' ~ session.usuario_id ~ '/' ~ foto.nombre_archivo) }}" type="video/{{ extension }}">
-                    </video>
+                <video preload="metadata" style="pointer-events: none;">
+                    <source src="{{ url_archivo }}" type="video/{{ extension }}">
+                </video>
                 {% elif extension in ['png', 'jpg', 'jpeg', 'gif', 'webp'] %}
-                    <a href="{{ url_for('static', filename='imagenes/' ~ session.usuario_id ~ '/' ~ foto.nombre_archivo) }}" target="_blank">
-                        <img src="{{ url_for('static', filename='imagenes/' ~ session.usuario_id ~ '/' ~ foto.nombre_archivo) }}" loading="lazy">
-                    </a>
+                <img src="{{ url_archivo }}" loading="lazy">
                 {% else %}
-                    <div style="text-align: center; padding: 20px;">
-                        <p style="font-size: 0.8em; color: #94a3b8; margin-bottom: 10px;">Formato {{ extension.upper() }} no compatible con reproduccion directa</p>
-                        <a href="{{ url_for('static', filename='imagenes/' ~ session.usuario_id ~ '/' ~ foto.nombre_archivo) }}" 
-                           download class="btn-nav" style="background: #2563eb;">Descargar para ver</a>
-                    </div>
+                <div style="text-align: center; padding: 20px;">
+                    <p style="font-size: 0.8em; color: #94a3b8; margin-bottom: 10px;">Formato {{ extension.upper() }}
+                        (Descarga)</p>
+                </div>
                 {% endif %}
             </div>
-            
+
             <div class="card-info">
                 <div class="card-title">{{ foto.titulo }}</div>
+                <div class="card-meta" style="font-size: 0.75em; color: #94a3b8; margin-bottom: 10px;">
+                    {{ foto.fecha.strftime('%d/%m/%Y %H:%M') }} • {{ foto.nombre_archivo |
+                    tamano_archivo(session.usuario_id) }}
+                </div>
+
+                {% if foto.enlace_compartido %}
+                <div
+                    style="background: #064e3b; padding: 5px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <button onclick="copiarAlPortapapeles('{{ request.host_url }}v/{{ foto.enlace_compartido }}')"
+                        style="background:none; border:none; color:#10b981; cursor:pointer; font-size: 0.8em;">🔗 Copiar
+                        Enlace</button>
+                    <form action="/dejar_compartir/{{ foto.id }}" method="POST" style="margin:0;">
+                        <button type="submit"
+                            onclick="return confirm('¿Dejar de compartir este archivo? El enlace dejará de funcionar al instante.');"
+                            style="background:none; border:none; color:#ef4444; cursor:pointer; font-weight:bold;">X</button>
+                    </form>
+                </div>
+                {% else %}
+                <form action="/compartir/{{ foto.id }}" method="POST" style="margin-bottom: 10px;">
+                    <button type="submit"
+                        style="width: 100%; background: #334155; color: white; border: none; padding: 5px; border-radius: 4px; cursor: pointer; font-size: 0.85em;">Compartir
+                        públicamente</button>
+                </form>
+                {% endif %}
             </div>
 
             <a href="/borrar/{{ foto.id }}" class="btn-borrar" onclick="return confirm('¿Seguro?');">Eliminar</a>
         </div>
-    {% endfor %}
+        {% endfor %}
     </div>
 
+    <div id="miModal" class="modal" onclick="cerrarModal()">
+        <span class="cerrar" onclick="cerrarModal()">&times;</span>
+        <div id="contenidoModal" onclick="event.stopPropagation()"></div>
+    </div>
+
+    <script>
+        function copiarAlPortapapeles(texto) {
+            navigator.clipboard.writeText(texto).then(() => {
+                alert("¡Enlace copiado al portapapeles!");
+            });
+        }
+
+        function abrirModal(url, extension) {
+            const modal = document.getElementById("miModal");
+            const contenedor = document.getElementById("contenidoModal");
+            contenedor.innerHTML = "";
+
+            if (['mp4', 'webm'].includes(extension)) {
+                contenedor.innerHTML = `<video controls autoplay style="max-width: 90vw; max-height: 80vh;"><source src="${url}" type="video/${extension}"></video>`;
+            } else if (['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(extension)) {
+                contenedor.innerHTML = `<img src="${url}" style="max-width: 90vw; max-height: 80vh; border-radius: 8px;">`;
+            } else {
+                window.location.href = url;
+                return;
+            }
+            modal.style.display = "flex";
+        }
+
+        function cerrarModal() {
+            document.getElementById("miModal").style.display = "none";
+            document.getElementById("contenidoModal").innerHTML = "";
+        }
+    </script>
 </body>
+
 </html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ foto.titulo }} - Archivo Compartido</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;">
+
+    <h2 style="margin-bottom: 5px;">{{ foto.titulo }}</h2>
+    <p style="color: #94a3b8; margin-bottom: 20px;">Compartido por {{ foto.username }}</p>
+
+    <div style="background: #1e293b; padding: 20px; border-radius: 8px; border: 1px solid #334155; max-width: 90vw;">
+        {% set extension = foto.nombre_archivo.split('.')[-1].lower() %}
+        {% set url_archivo = url_for('static', filename='imagenes/' ~ foto.usuario_id ~ '/' ~ foto.nombre_archivo) %}
+
+        {% if extension in ['mp4', 'webm'] %}
+        <video controls autoplay style="max-width: 100%; max-height: 60vh;">
+            <source src="{{ url_archivo }}" type="video/{{ extension }}">
+        </video>
+        {% elif extension in ['png', 'jpg', 'jpeg', 'gif', 'webp'] %}
+        <img src="{{ url_archivo }}" style="max-width: 100%; max-height: 60vh; border-radius: 4px;">
+        {% else %}
+        <p>Formato no compatible. <a href="{{ url_archivo }}" download style="color: #3b82f6;">Descargar archivo</a></p>
+        {% endif %}
+    </div>
+
+    <a href="/" style="margin-top: 30px; color: #3b82f6; text-decoration: underline;">Ir a pyGallery</a>
+</body>
+
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>pyGallery - Ajustes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="auth-body" style="overflow: auto;">
+    <div class="barra-usuario">
+        <div style="font-size: 1.5em; font-weight: bold; color: #3b82f6; margin-left: 10px;">
+            pyGallery TESTING
+        </div>
+        <div>
+            <a href="/" class="btn-nav">Volver al inicio</a>
+        </div>
+    </div>
+
+    <div style="padding-top: 80px; padding-bottom: 50px; width: 100%;">
+        <div class="form-container" style="max-width: 500px; margin: 0 auto; display: block;">
+            <h2 class="auth-title" style="text-align: center;">Ajustes de cuenta</h2>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alerta-{{ 'exito' if category == 'exito' else 'error' }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <div
+                style="text-align: left; background: rgba(30, 41, 59, 0.4); padding: 25px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); margin-top: 30px;">
+                <h3 style="color: #f8fafc; margin-bottom: 20px;">Tus Dispositivos (Sincronizador)</h3>
+
+                {% if sesiones %}
+                {% for sesion in sesiones %}
+                <div
+                    style="background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255, 255, 255, 0.02);">
+                    <div>
+                        <strong style="color: #60a5fa; font-size: 1.1em;">{{ sesion.os_name }}</strong>
+                        <div style="font-size: 0.8em; color: #94a3b8; margin-top: 4px;">Conectado el: {{
+                            sesion.fecha_conexion.strftime('%d/%m/%Y %H:%M') }}</div>
+                    </div>
+                    <form action="/revocar_sesion/{{ sesion.token }}" method="POST" style="margin: 0;">
+                        <input type="submit" value="Desvincular"
+                            style="background: #334155; padding: 8px 15px; font-size: 0.85em; width: auto; margin: 0; box-shadow: none;">
+                    </form>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p style="color: #94a3b8; font-size: 0.9em;">No tienes ningún sincronizador de escritorio vinculado a tu
+                    cuenta actualmente.</p>
+                {% endif %}
+            </div>
+
+            <div
+                style="background: rgba(185, 28, 28, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); padding: 25px; border-radius: 12px; margin-top: 40px; text-align: left;">
+                <h3 style="color: #fca5a5; margin-bottom: 10px;">Zona de Peligro</h3>
+                <p style="color: #94a3b8; font-size: 0.9em; margin-bottom: 25px;">Eliminar tu cuenta borrará
+                    permanentemente todos tus archivos, fotos y datos. Esta acción no se puede deshacer de ninguna
+                    forma.</p>
+
+                <form action="/borrar_cuenta" method="POST" style="margin: 0;">
+                    <input type="password" name="password" placeholder="Ingresa tu contraseña para confirmar" required>
+                    <input type="submit" value="Eliminar Cuenta Definitivamente"
+                        style="background: #b91c1c; box-shadow: none; margin-bottom: 0;">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

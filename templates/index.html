@@ -17,12 +17,9 @@
         <div>
             {% if session.usuario_nombre %}
             <span>¡Hola, {{ session.usuario_nombre }}!</span>
-            <a href="/logout" class="btn-nav btn-logout">Cerrar Sesion</a>
-            <form action="/borrar_cuenta" method="POST" style="display: inline; margin-left: 10px;">
-                <button type="submit" class="btn-nav btn-eliminar"
-                    onclick="return confirm('¿ESTAS SEGURO? Se borrara tu cuenta y todos tus archivos. Esta accion es IRREVERSIBLE.');">Eliminar
-                    Cuenta</button>
-            </form>
+            <a href="/papelera" class="btn-nav" style="margin-right: 10px;">Papelera</a>
+            <a href="/ajustes" class="btn-nav">Ajustes</a>
+            <a href="/logout" class="btn-nav btn-logout" style="margin-left: 10px;">Cerrar Sesion</a>
             {% else %}
             <a href="/login" class="btn-nav">Iniciar Sesion</a>
             {% endif %}
@@ -98,9 +95,18 @@
                 {% endif %}
             </div>
 
-            <a href="/borrar/{{ foto.id }}" class="btn-borrar" onclick="return confirm('¿Seguro?');">Eliminar</a>
+            <a href="/borrar/{{ foto.id }}" class="btn-borrar"
+                onclick="return confirm('¿Mover a la papelera?');">Eliminar</a>
         </div>
         {% endfor %}
+    </div>
+
+    <div class="paginacion">
+        <a href="{{ url_for('index', page=page-1) }}" class="btn-paginacion {% if page <= 1 %}disabled{% endif %}">❮
+            Anterior</a>
+        <span class="pagina-actual">{{ page }} / {{ total_pages }}</span>
+        <a href="{{ url_for('index', page=page+1) }}"
+            class="btn-paginacion {% if page >= total_pages %}disabled{% endif %}">Siguiente ❯</a>
     </div>
 
     <div id="miModal" class="modal" onclick="cerrarModal()">

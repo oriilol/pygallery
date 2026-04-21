@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>pyGallery - Papelera</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="barra-usuario">
+        <div style="font-size: 1.5em; font-weight: bold; color: #3b82f6; margin-left: 10px;">
+            pyGallery TESTING
+        </div>
+        <div>
+            <a href="/" class="btn-nav">Volver al inicio</a>
+        </div>
+    </div>
+
+    <h1>Papelera de reciclaje</h1>
+    <p style="text-align: center; color: #94a3b8; margin-bottom: 40px;">Los elementos eliminados se guardan aquí. Puedes
+        restaurarlos o destruirlos para siempre.</p>
+
+    <div class="galeria">
+        {% for foto in fotos %}
+        <div class="card">
+            {% set extension = foto.nombre_archivo.split('.')[-1].lower() %}
+            {% set url_archivo = url_for('static', filename='imagenes/' ~ session.usuario_id ~ '/' ~
+            foto.nombre_archivo) %}
+
+            <div class="media-container" style="opacity: 0.6;">
+                {% if extension in ['mp4', 'webm'] %}
+                <video preload="metadata" style="pointer-events: none;">
+                    <source src="{{ url_archivo }}" type="video/{{ extension }}">
+                </video>
+                {% elif extension in ['png', 'jpg', 'jpeg', 'gif', 'webp'] %}
+                <img src="{{ url_archivo }}" loading="lazy">
+                {% else %}
+                <div style="text-align: center; padding: 20px;">
+                    <p style="font-size: 0.8em; color: #94a3b8; margin-bottom: 10px;">Formato {{ extension.upper() }}
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="card-info" style="padding-bottom: 5px;">
+                <div class="card-title" style="color: #64748b; text-decoration: line-through;">{{ foto.titulo }}</div>
+            </div>
+
+            <div style="display: flex; border-top: 1px solid #334155;">
+                <a href="/restaurar/{{ foto.id }}" class="btn-borrar"
+                    style="color: #10b981; border-right: 1px solid #334155; border-top: none; flex: 1;">Restaurar</a>
+                <a href="/borrar_definitivo/{{ foto.id }}" class="btn-borrar" style="border-top: none; flex: 1;"
+                    onclick="return confirm('¿Seguro que quieres destruir este archivo? Se borrará del disco duro.');">Destruir</a>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if not fotos %}
+        <div style="grid-column: 1 / -1; text-align: center; color: #475569; padding: 80px; font-size: 1.2em;">
+            La papelera está vacía.
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>

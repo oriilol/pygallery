@@ -1,4 +1,13 @@
-# pyGallery
+# pyGallery (⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️ RAMA DE TESTING)
+
+![Static Badge](https://img.shields.io/badge/Ubuntu-24.04-red?style=for-the-badge&logo=ubuntu)
+![Static Badge](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
+![Static Badge](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)
+![Static Badge](https://img.shields.io/badge/Python-3.10-blue?style=for-the-badge&logo=python&logoColor=white)
+![Static Badge](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![Static Badge](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+
+# ⚠️ (Estás en la rama 'testing'. Es decir, este no es el proyecto en sí. Esta versión corre en localhost para trastear con el programa y puede tener mas cosas que la versión de 'main'. Si quieres usar el proyecto real, ve a la rama 'main'.)
 
 Plataforma de almacenamiento en la nube privada dedicada a la gestión y sincronización de fotos y vídeos. 
 

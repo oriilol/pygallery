@@ -49,14 +49,13 @@ class PyGalleryApp:
 
         tk.Button(self.root, text="INICIAR SESIÓN", command=self.login, bg="#2563eb", fg="white", font=("Arial", 10, "bold"), bd=0, cursor="hand2").pack(pady=30, ipady=10, padx=50, fill="x")
 
-        btn_reg = tk.Label(self.root, text="¿No tienes cuenta? Regístrate, cojones", bg="#1e1e1e", fg="#3498db", cursor="hand2")
+        btn_reg = tk.Label(self.root, text="¿No tienes cuenta? Regístrate, ahora mismo.", bg="#1e1e1e", fg="#3498db", cursor="hand2")
         btn_reg.pack()
         btn_reg.bind("<Button-1>", lambda e: webbrowser.open(f"{SERVIDOR_URL}/registro"))
 
     def login(self):
         user = self.entry_user.get()
         password = self.entry_pass.get()
-
         try:
             respuesta = requests.post(f"{SERVIDOR_URL}/api/login", json={"username": user, "password": password}, verify=False, timeout=10)
 

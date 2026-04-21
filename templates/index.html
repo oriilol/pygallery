@@ -10,9 +10,9 @@
 
 <body>
 
-    <div class="barra-usuario" style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="barra-usuario">
         <div style="font-size: 1.5em; font-weight: bold; color: #3b82f6; margin-left: 10px;">
-            pyGallery
+            pyGallery TESTING
         </div>
         <div>
             {% if session.usuario_nombre %}
@@ -29,9 +29,10 @@
         </div>
     </div>
 
+    {% if session.usuario_nombre %}
+
     <h1>Tu espacio</h1>
 
-    {% if session.usuario_nombre %}
     <div class="accion-principal">
         <a href="/subir" class="boton-grande">Subir archivo</a>
     </div>
@@ -45,7 +46,6 @@
                 style="width: {{ porcentaje }}%;"></div>
         </div>
     </div>
-    {% endif %}
 
     <div class="galeria">
         {% for foto in fotos %}
@@ -136,6 +136,72 @@
             document.getElementById("contenidoModal").innerHTML = "";
         }
     </script>
+
+    {% else %}
+
+    <div class="landing-background">
+        <div class="landing-container">
+            <h1 class="landing-title">Una galería en la nube de <span class="text-gradient">código abierto.</span></h1>
+            <p class="landing-subtitle">Sincroniza, comparte y organiza tus fotos y vídeos desde cualquier dispositivo
+                sin depender de las grandes empresas tecnológicas.</p>
+
+            <div class="landing-features">
+                <div class="feature-card">
+                    <h3>☁️ Almacenamiento</h3>
+                    <p>15 GB de espacio privado en la nube por usuario para todos tus recuerdos.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔄 Sincronización</h3>
+                    <p>Aplicaciones nativas ultrarrápidas para macOS, Windows y Linux.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔗 Enlaces Públicos</h3>
+                    <p>Crea enlaces públicos para compartir tus archivos multimedia en un instante.</p>
+                </div>
+            </div>
+
+            <div class="landing-architecture">
+                <h2>¿Cómo funciona?</h2>
+                <div class="architecture-grid">
+                    <div class="architecture-card">
+                        <p class="icon-large">💻</p>
+                        <h3>El Cliente (Sincronizador)</h3>
+                        <p>La aplicación de escritorio vigila tus carpetas locales en Windows, Mac o Linux y sube los
+                            archivos nuevos automáticamente.</p>
+                    </div>
+                    <div class="architecture-card">
+                        <p class="icon-large">🏠</p>
+                        <h3>Tu Servidor (En casa)</h3>
+                        <p>Los archivos y la base de datos MySQL viven en tu propio servidor, garantizando privacidad
+                            total.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                style="text-align: center; margin-top: 80px; padding: 40px; background: rgba(30, 41, 59, 0.4); border-radius: 16px; border: 1px solid #334155;">
+                <p style="font-size: 1.1em; color: #94a3b8; font-weight: 500; margin-bottom: 20px;">Estado de Desarrollo
+                </p>
+                <div class="status-badge">
+                    <span class="status-icon">🚀</span> Código Abierto & Beta Abierta
+                </div>
+                <div style="margin-top: 30px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <a href="/login" class="boton-grande" style="font-size: 1.1em; padding: 15px 40px;">Empezar
+                        ahora</a>
+                    <a href="https://github.com/oriilol/pygallery" target="_blank" class="boton-secundario"
+                        style="font-size: 1.1em; padding: 15px 40px;">Ver en GitHub</a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="testing-warning">
+            ⚠️ Estás navegando en la rama <strong>testing</strong>. Las funciones experimentales pueden ser inestables.
+        </div>
+    </div>
+
+    {% endif %}
+
 </body>
 
 </html>

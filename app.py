@@ -13,7 +13,7 @@ CONFIG_BD = {
     'user': 'pyuser',
     'password': '1234',
     'database': 'pygallery_db'
-    }
+}
 
 CARPETA_IMAGENES = os.path.join('static', 'imagenes')
 app.config['UPLOAD_FOLDER'] = CARPETA_IMAGENES
@@ -23,7 +23,7 @@ EXTENSIONES_FOTO = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 EXTENSIONES_VIDEO = {'mp4', 'mov', 'avi', 'mkv', 'webm'}
 EXTENSIONES_VALIDAS = EXTENSIONES_FOTO.union(EXTENSIONES_VIDEO)
 
-LIMITE_ESPACIO_BYTES = 15 * 1024 * 1024 * 1024 
+LIMITE_ESPACIO_BYTES = 15 * 1024 * 1024 * 1024
 
 def conectar_bd():
     return mysql.connector.connect(**CONFIG_BD)
@@ -80,28 +80,23 @@ def api_login():
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @app.route('/')
-def inicio():
+def index():
     if 'usuario_id' not in session:
-        return redirect(url_for('login'))
+        return render_template('index.html')
 
-    id_actual = session['usuario_id']
-    try:
-        conexion = conectar_bd()
-        cursor = conexion.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM fotos WHERE usuario_id = %s ORDER BY fecha DESC", (id_actual,))
-        lista_fotos = cursor.fetchall()
-        cursor.close()
-        conexion.close()
-        
-        bytes_usados = calcular_espacio_usuario(id_actual)
-        porcentaje = (bytes_usados / LIMITE_ESPACIO_BYTES) * 100
-        texto_espacio = formatear_espacio(bytes_usados)
-        
-        return render_template('index.html', fotos=lista_fotos, 
-                               espacio_usado=texto_espacio, 
-                               porcentaje=porcentaje)
-    except Exception as e:
-        return f"Error: {e}"
+    usuario_id = session['usuario_id']
+    conexion = conectar_bd()
+    cursor = conexion.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM fotos WHERE usuario_id = %s ORDER BY fecha DESC", (usuario_id,))
+    fotos = cursor.fetchall()
+    cursor.close()
+    conexion.close()
+
+    espacio_usado_bytes = calcular_espacio_usuario(usuario_id)
+    espacio_usado = formatear_espacio(espacio_usado_bytes)
+    porcentaje = (espacio_usado_bytes / LIMITE_ESPACIO_BYTES) * 100
+
+    return render_template('index.html', fotos=fotos, espacio_usado=espacio_usado, porcentaje=porcentaje)
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
@@ -136,7 +131,7 @@ def login():
         if user_encontrado:
             session['usuario_id'] = user_encontrado['id']
             session['usuario_nombre'] = user_encontrado['username']
-            return redirect(url_for('inicio'))
+            return redirect(url_for('index'))
         else:
             flash("Usuario o contraseña incorrectos.", "error")
     return render_template('login.html')
@@ -144,7 +139,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('inicio'))
+    return redirect(url_for('index'))
 
 @app.route('/subir', methods=['GET', 'POST'])
 def subir_foto():
@@ -184,7 +179,7 @@ def subir_foto():
             conexion.commit()
             cursor.close()
             conexion.close()
-            return redirect(url_for('inicio'))
+            return redirect(url_for('index'))
             
     return render_template('subir.html', lleno=esta_lleno)
 
@@ -205,7 +200,7 @@ def borrar_foto(foto_id):
         cursor.close()
     cursor_dict.close()
     conexion.close()
-    return redirect(url_for('inicio'))
+    return redirect(url_for('index'))
 
 @app.route('/borrar_cuenta', methods=['POST'])
 def borrar_cuenta():
@@ -234,7 +229,7 @@ def compartir_foto(foto_id):
     conexion.commit()
     cursor.close()
     conexion.close()
-    return redirect(url_for('inicio'))
+    return redirect(url_for('index'))
 
 @app.route('/dejar_compartir/<int:foto_id>', methods=['POST'])
 def dejar_compartir(foto_id):
@@ -245,7 +240,7 @@ def dejar_compartir(foto_id):
     conexion.commit()
     cursor.close()
     conexion.close()
-    return redirect(url_for('inicio'))
+    return redirect(url_for('index'))
 
 @app.route('/v/<enlace>')
 def ver_compartido(enlace):

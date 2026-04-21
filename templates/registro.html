@@ -8,32 +8,46 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+<body class="auth-body">
+    <div class="auth-page-container">
 
-    <div class="form-container">
-        <h2 style="margin-bottom: 20px; color: #f8fafc;">Crear Cuenta</h2>
+        <div class="auth-left-panel">
+            <div class="auth-form-wrapper">
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        {% for category, message in messages %}
-        <div class="alerta-{{ 'exito' if category == 'exito' else 'error' }}">
-            {{ message }}
+                <div class="auth-header">
+                    <h1 class="auth-brand">pyGallery</h1>
+                    <p class="auth-subtitle">Crea tu cuenta privada en la nube</p>
+                </div>
+
+                <h2 class="auth-title">Crear Cuenta</h2>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="alerta-{{ 'exito' if category == 'exito' else 'error' }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="/registro">
+                    <input type="text" name="username" placeholder="Nuevo Usuario" required>
+                    <input type="password" name="password" placeholder="Nueva Contraseña" required>
+                    <input type="submit" value="Registrarse">
+                </form>
+
+                <p class="auth-link">
+                    ¿Ya tienes cuenta? <a href="/login">Inicia sesión</a>
+                </p>
+            </div>
         </div>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
 
-        <form method="POST" action="/registro">
-            <input type="text" name="username" placeholder="Nuevo Usuario" required>
-            <input type="password" name="password" placeholder="Nueva Contraseña" required>
-            <input type="submit" value="Registrarse">
-        </form>
+        <div class="auth-right-panel">
+            <div class="landing-background auth-background-grid"></div>
+        </div>
 
-        <p style="margin-top: 20px; font-size: 0.9em;">
-            ¿Ya tienes cuenta? <a href="/login" style="color: #3b82f6;">Inicia sesion</a>
-        </p>
     </div>
-
 </body>
 
 </html>

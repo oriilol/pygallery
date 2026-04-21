@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - No hay rastro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #020617;
+            /* Fondo ultra oscuro */
+            color: #f8fafc;
+            font-family: 'DM Sans', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* La rejilla de fondo */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(to right, #1e293b 1px, transparent 1px),
+                linear-gradient(to bottom, #1e293b 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            opacity: 0.2;
+        }
+
+        .error-card {
+            background: #0f172a;
+            /* Fondo de la tarjeta un poco más claro */
+            border: 1px solid #1e293b;
+            padding: 50px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 420px;
+            width: 85%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        .sad-mac-image {
+            width: 140px;
+            height: auto;
+            margin-bottom: 25px;
+            /* FILTRO  PARA HACER LA IMAGEN BLANCA ENTERA */
+            filter: brightness(0) invert(1);
+            image-rendering: pixelated;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #3b82f6;
+            margin: 0 0 10px 0;
+        }
+
+        .message {
+            color: #94a3b8;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 35px;
+        }
+
+        .btn-return {
+            background: #2563eb;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            transition: 0.2s ease;
+        }
+
+        .btn-return:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-grid"></div>
+
+    <div class="error-card">
+        <img src="{{ url_for('static', filename='sad-mac.png') }}" class="sad-mac-image" alt="Sad Mac">
+
+        <h1>404 | Vaya...</h1>
+        <p class="message">
+            Hemos buscado por todos lados pero...<br>
+            <strong>No hay rastro de esto.</strong>
+        </p>
+
+        <a href="/" class="btn-return">Volver al inicio</a>
+    </div>
+</body>
+
+</html>

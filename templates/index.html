@@ -10,18 +10,23 @@
 
 <body>
 
-    <div class="barra-usuario">
-        {% if session.usuario_nombre %}
-        <span>¡Hola, {{ session.usuario_nombre }}!</span>
-        <a href="/logout" class="btn-nav btn-logout">Cerrar Sesion</a>
-        <form action="/borrar_cuenta" method="POST" style="display: inline; margin-left: 10px;">
-            <button type="submit" class="btn-nav btn-eliminar"
-                onclick="return confirm('¿ESTAS SEGURO? Se borrara tu cuenta y todos tus archivos. Esta accion es IRREVERSIBLE.');">Eliminar
-                Cuenta</button>
-        </form>
-        {% else %}
-        <a href="/login" class="btn-nav">Iniciar Sesion</a>
-        {% endif %}
+    <div class="barra-usuario" style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="font-size: 1.5em; font-weight: bold; color: #3b82f6; margin-left: 10px;">
+            pyGallery
+        </div>
+        <div>
+            {% if session.usuario_nombre %}
+            <span>¡Hola, {{ session.usuario_nombre }}!</span>
+            <a href="/logout" class="btn-nav btn-logout">Cerrar Sesion</a>
+            <form action="/borrar_cuenta" method="POST" style="display: inline; margin-left: 10px;">
+                <button type="submit" class="btn-nav btn-eliminar"
+                    onclick="return confirm('¿ESTAS SEGURO? Se borrara tu cuenta y todos tus archivos. Esta accion es IRREVERSIBLE.');">Eliminar
+                    Cuenta</button>
+            </form>
+            {% else %}
+            <a href="/login" class="btn-nav">Iniciar Sesion</a>
+            {% endif %}
+        </div>
     </div>
 
     <h1>Tu espacio</h1>

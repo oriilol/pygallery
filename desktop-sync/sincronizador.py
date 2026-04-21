@@ -10,7 +10,7 @@ import platform
 from PIL import Image, ImageDraw
 import urllib3
 
-SERVIDOR_URL = "https://pygallery.ddns.net:5000"
+SERVIDOR_URL = "http://127.0.0.1:5000"
 
 EXT_VALIDAS = ('.png', '.jpg', '.jpeg', '.gif', '.webp', '.mp4', '.mov', '.avi', '.mkv', '.webm')
 
@@ -21,7 +21,7 @@ class PyGalleryApp:
         self.root = root
         self.on_close_callback = on_close_callback
 
-        self.root.title("pygallery Desktop Sync")
+        self.root.title("pygallery Desktop Sync (ver. local de prueba)")
         self.root.geometry("500x550")
         self.root.configure(bg="#1e1e1e")
         self.root.protocol("WM_DELETE_WINDOW", self.on_close_callback)
@@ -49,7 +49,7 @@ class PyGalleryApp:
 
         tk.Button(self.root, text="INICIAR SESIÓN", command=self.login, bg="#2563eb", fg="white", font=("Arial", 10, "bold"), bd=0, cursor="hand2").pack(pady=30, ipady=10, padx=50, fill="x")
 
-        btn_reg = tk.Label(self.root, text="¿No tienes cuenta? Regístrate aquí", bg="#1e1e1e", fg="#3498db", cursor="hand2")
+        btn_reg = tk.Label(self.root, text="¿No tienes cuenta? Regístrate, cojones", bg="#1e1e1e", fg="#3498db", cursor="hand2")
         btn_reg.pack()
         btn_reg.bind("<Button-1>", lambda e: webbrowser.open(f"{SERVIDOR_URL}/registro"))
 

@@ -1,23 +1,23 @@
-/* IMPORTAR FUENTE DM SANS */
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap');
 
-/* --- RESET Y BASE --- */
-* { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
     font-family: 'DM Sans', sans-serif;
-    background-color: #0f172a; 
-    color: #e2e8f0;            
+    background-color: #0f172a;
+    color: #e2e8f0;
     line-height: 1.6;
 }
 
-a { text-decoration: none; transition: 0.3s; }
+a {
+    text-decoration: none;
+    transition: 0.3s;
+}
 
-/* --- BARRA DE NAVEGACION --- */
 .barra-usuario {
     background: #1e293b;
     padding: 15px 30px;
@@ -27,7 +27,10 @@ a { text-decoration: none; transition: 0.3s; }
     border-bottom: 1px solid #334155;
 }
 
-.barra-usuario span { margin-right: 15px; font-weight: 500; }
+.barra-usuario span {
+    margin-right: 15px;
+    font-weight: 500;
+}
 
 .btn-nav {
     background: #334155;
@@ -41,10 +44,19 @@ a { text-decoration: none; transition: 0.3s; }
     vertical-align: middle;
     font-family: 'DM Sans', sans-serif;
 }
-.btn-nav:hover { background: #475569; }
 
-.btn-logout { background: #b91c1c; border-color: #991b1b; }
-.btn-logout:hover { background: #dc2626; }
+.btn-nav:hover {
+    background: #475569;
+}
+
+.btn-logout {
+    background: #b91c1c;
+    border-color: #991b1b;
+}
+
+.btn-logout:hover {
+    background: #dc2626;
+}
 
 .btn-eliminar {
     background: #991b1b;
@@ -58,7 +70,6 @@ a { text-decoration: none; transition: 0.3s; }
     background: #dc2626;
 }
 
-/* --- TITULOS Y BOTONES PRINCIPALES --- */
 h1 {
     text-align: center;
     margin-top: 40px;
@@ -80,9 +91,11 @@ h1 {
     font-weight: 700;
     display: inline-block;
 }
-.boton-grande:hover { background: #1d4ed8; }
 
-/* --- BARRA DE ESPACIO (DENTRO DE INDEX) --- */
+.boton-grande:hover {
+    background: #1d4ed8;
+}
+
 .espacio-container {
     background: #1e293b;
     padding: 15px 20px;
@@ -116,10 +129,9 @@ h1 {
 }
 
 .espacio-barra-progreso.alerta {
-    background: #ef4444; 
+    background: #ef4444;
 }
 
-/* --- GRID DE LA GALERIA --- */
 .galeria {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -138,7 +150,6 @@ h1 {
     flex-direction: column;
 }
 
-/* --- MEDIA (FOTOS Y VIDEOS) --- */
 .media-container {
     width: 100%;
     height: 200px;
@@ -149,13 +160,13 @@ h1 {
     overflow: hidden;
 }
 
-.media-container img, .media-container video {
+.media-container img,
+.media-container video {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-/* --- INFO DE LA TARJETA --- */
 .card-info {
     padding: 15px;
     text-align: center;
@@ -185,7 +196,6 @@ h1 {
     color: white;
 }
 
-/* --- FORMULARIOS (LOGIN / SUBIR) --- */
 .form-container {
     background: #1e293b;
     padding: 40px;
@@ -196,7 +206,9 @@ h1 {
     border: 1px solid #334155;
 }
 
-input[type="text"], input[type="password"], input[type="file"] {
+input[type="text"],
+input[type="password"],
+input[type="file"] {
     width: 100%;
     padding: 12px;
     margin: 10px 0 20px 0;
@@ -219,7 +231,10 @@ input[type="submit"] {
     font-weight: 700;
     font-family: 'DM Sans', sans-serif;
 }
-input[type="submit"]:hover { background: #1d4ed8; }
+
+input[type="submit"]:hover {
+    background: #1d4ed8;
+}
 
 .alerta-error {
     background: #450a0a;
@@ -231,6 +246,7 @@ input[type="submit"]:hover { background: #1d4ed8; }
     text-align: left;
     font-size: 0.9em;
 }
+
 .alerta-exito {
     background: #064e3b;
     border: 1px solid #10b981;
@@ -240,4 +256,27 @@ input[type="submit"]:hover { background: #1d4ed8; }
     border-radius: 4px;
     text-align: left;
     font-size: 0.9em;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal .cerrar {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
 }

@@ -10,11 +10,10 @@ app = Flask(__name__)
 app.secret_key = 'super_secreto_clave_clase_smr'
 
 CONFIG_BD = {
-    'host': 'localhost',
-    'user': 'pyuser',      
-    'password': '1234',    
+    'user': 'pyuser',
+    'password': '1234',
     'database': 'pygallery_db'
-}
+    }
 
 CARPETA_IMAGENES = os.path.join('static', 'imagenes')
 app.config['UPLOAD_FOLDER'] = CARPETA_IMAGENES
@@ -261,4 +260,4 @@ def ver_compartido(enlace):
     return render_template('compartido.html', foto=foto)
 
 if __name__ == '__main__':
-    app.run(host='192.168.1.39', port=5000, ssl_context=('cert.pem', 'key.pem'), debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)

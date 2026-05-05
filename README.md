@@ -61,11 +61,39 @@ Está pensado para uso personal o entre un grupo pequeño de personas de confian
 
 ## pyGallery Desktop Sync
 
-Aplicación de escritorio desarrollada por **Gonzalo**, compatible con Windows, Linux y macOS.
+Aplicación de escritorio desarrollada por **Gonzalo** que se queda corriendo en segundo 
+plano y sube automáticamente los archivos nuevos de tus carpetas al servidor.
 
-Funciona en segundo plano: el usuario inicia sesión una sola vez, selecciona las carpetas que quiere vigilar, y la app comprueba cada 5 minutos si hay archivos nuevos para subirlos al servidor automáticamente.
+**Plataformas:** Windows, Linux y macOS  
+**Dependencias:** `requests`, `Pillow`, `pystray`, `urllib3`, `tkinter`
 
-Un detalle importante en el diseño: **la sincronización es solo de subida**. Borrar un archivo de tu equipo no lo elimina del servidor, y viceversa. Esto es intencional, para evitar pérdidas accidentales de datos. Si quieres borrar algo del servidor, tienes que hacerlo manualmente desde la web.
+### Cómo funciona
+
+Al abrirla, pide usuario y contraseña (los mismos de la web). Una vez dentro, 
+seleccionas la carpeta local que quieres vigilar y la app empieza a escanearla 
+cada 10 segundos. Si detecta archivos con extensiones válidas que aún no ha subido, 
+los sube automáticamente al servidor con el título "Sync: {nombre del archivo}".
+
+Acepta los mismos formatos que el servidor: `png`, `jpg`, `jpeg`, `gif`, `webp`, 
+`mp4`, `mov`, `avi`, `mkv` y `webm`.
+
+### Detalles a tener en cuenta
+
+- **El registro de archivos enviados es en memoria.** Si cierras la app y la vuelves 
+  a abrir, no recuerda qué había subido ya. En el servidor esto no es problema porque 
+  Flask rechaza duplicados, pero sí verás que intenta subirlos de nuevo al arrancar.
+
+- **Al cerrar la ventana no se cierra la aplicación**, se minimiza a la bandeja del 
+  sistema (system tray) en Windows y Linux. Desde ahí puedes volver a abrirla o 
+  cerrarla del todo. En macOS, al no tener soporte completo de pystray, se minimiza 
+  al dock en su lugar.
+
+- **La sincronización es solo de subida.** Borrar un archivo de tu carpeta local no 
+  lo elimina del servidor. Para borrar algo del servidor hay que hacerlo manualmente 
+  desde la web.
+
+- Si el servidor detecta que has llegado al límite de 15 GB, la app para de intentar 
+  subir archivos y te muestra un aviso.
 
 ---
 
